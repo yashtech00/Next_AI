@@ -1,4 +1,5 @@
-import { Request, Response } from "express";
+import type { Request } from "express";
+import type { Response } from "express";
 import prisma from "@nextai/db";
 
 export const createProject = async (req: Request, res: Response) => {

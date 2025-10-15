@@ -1,27 +1,17 @@
 {
   "name": "backend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@nextai/db": "file:../../packages/db",
-    "bcrypt": "^6.0.0",
-    "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "nodemailer": "^7.0.9",
-    "uuid": "^13.0.0"
-  },
+  "module": "src/index.ts",
+  "type": "module",
+  "private": true,
   "devDependencies": {
-    "@types/bcrypt": "^6.0.0",
-    "@types/express": "^5.0.3",
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/nodemailer": "^7.0.2",
-    "@types/uuid": "^11.0.0"
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@types/cors": "^2.8.19",
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
   }
 }
