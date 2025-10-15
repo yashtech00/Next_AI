@@ -28,7 +28,6 @@ model User{
 model Project{
   id String @id @default(cuid())
   title String 
-  initial_prompt String 
   user_id String
   user User @relation(fields: [user_id], references: [id])
   conversation_history ConversationHistory[]

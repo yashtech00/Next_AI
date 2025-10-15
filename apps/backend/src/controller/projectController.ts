@@ -1,29 +1,44 @@
 import type { Request } from "express";
 import type { Response } from "express";
-import prisma from "@nextai/db";
+import {prisma} from "db/client";
 
-export const createProject = async (req: Request, res: Response) => {
+export const createProject = async (req:any, res:any) => {
     try {
-        const { title, initial_prompt } = req.body;
+        const { prompt } = req.body;
+        const title = prompt.split("\n")[0];
+        const userId = req.userId;
         const project = await prisma.project.create({
             data: {
+                user_id: userId,
                 title,
-                initial_prompt,
-                user_id: req.user.id,
+                prompts: {
+                    create: [
+                        {
+                            content: prompt,
+                        },
+                    ],
+                },
+            },
+        }); // Include the initial prompt in the response
+        await prisma.prompt.create({
+            data: {
+                project_id: project.id,
+                content: prompt,
             },
         });
-        res.status(201).json(project);
+        res.status(201).json({projectId:project.id});
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Failed to create project" });
     }
 };
 
-export const getProjects = async (req: Request, res: Response) => {
+export const getProjects = async (req: any, res: any) => {
     try {
+        const userId = req.userId;
         const projects = await prisma.project.findMany({
             where: {
-                user_id: req.user.id,
+                user_id: userId,
             },
         });
         res.status(200).json(projects);
