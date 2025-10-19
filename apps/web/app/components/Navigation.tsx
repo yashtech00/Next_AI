@@ -1,21 +1,40 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Gift, Bell, User } from "lucide-react";
+import { motion } from "framer-motion";
+
+const navVariants = {
+  hidden: { opacity: 0, y: -8 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.38 } },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: -6 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.28 } },
+};
 
 const Navigation = () => {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-10 px-6 py-4" >
+    <motion.nav
+      initial="hidden"
+      animate="visible"
+      variants={navVariants}
+      className="fixed top-0 left-0 right-0 z-10 px-6 py-4"
+      aria-label="Primary Navigation"
+    >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo and Brand */}
         <div className="flex items-center gap-8">
-          <div className="flex items-center gap-2">
+          <motion.div variants={itemVariants} className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-to-br from-pink-500 to-orange-500 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-lg">N</span>
             </div>
             <h1 className="text-white font-semibold text-xl">Next Ai</h1>
-          </div>
-          
+          </motion.div>
+
           {/* Nav Links */}
-          <div className="hidden md:flex items-center gap-6">
+          <motion.div variants={itemVariants} className="hidden md:flex items-center gap-6">
             <a href="#" className="text-gray-300 hover:text-white transition-colors text-sm font-medium">
               Community
             </a>
@@ -25,27 +44,21 @@ const Navigation = () => {
             <a href="#" className="text-gray-300 hover:text-white transition-colors text-sm font-medium">
               Enterprise
             </a>
-          </div>
+          </motion.div>
         </div>
 
         {/* Right side actions */}
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" className="text-gray-300 hover:text-white hover:bg-white/10">
-            <Gift className="h-5 w-5" />
+        <motion.div variants={itemVariants} className="flex items-center gap-3">
+
+          <Button variant="ghost" size="icon" className="text-gray-300 hover:text-white hover:bg-white/10 px-10 py-2 gap-2 ">
+            Sign in
           </Button>
-          <Button variant="ghost" size="icon" className="text-gray-300 hover:text-white hover:bg-white/10 relative">
-            <Bell className="h-5 w-5" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+          <Button className="bg-black hover:bg-white/10 text-white rounded-lg px-4 py-2 flex items-center gap-2">
+            Get started
           </Button>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 flex items-center gap-2">
-            <div className="w-6 h-6 bg-blue-500 rounded flex items-center justify-center text-sm font-bold">
-              M
-            </div>
-            <span className="hidden sm:inline">My Lovable</span>
-          </Button>
-        </div>
+        </motion.div>
       </div>
-    </nav>
+    </motion.nav>
   );
 };
 
