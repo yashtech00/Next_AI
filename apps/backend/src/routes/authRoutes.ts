@@ -8,7 +8,6 @@ AuthRouter.post("/register",register );
 
 AuthRouter.post("/login",login );
 
-AuthRouter.post("/send-magic-link", sendMagicLink);
-AuthRouter.get("/verify-magic-link", verifyMagicLink);
+
 
 export default AuthRouter;

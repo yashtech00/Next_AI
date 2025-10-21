@@ -17,6 +17,6 @@ app.use("/api/v1/projects", ProjectRouter)
 
 app.use("/api/v1/auth", AuthRouter)
 
-app.listen(3000, () => {
-    console.log("Server started on port 3000");
+app.listen(8080, () => {
+    console.log("Server started on port 8080");
 });

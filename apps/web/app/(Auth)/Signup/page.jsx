@@ -1,11 +1,11 @@
 "use client"
 
-import SignupComp from "../../../components/sign-up"
+import UniqueForm from "@/components/register";
 
 export default function Register() {
     return (
         <div>
-                <SignupComp/>
+              <UniqueForm/>
         </div>
     );
 }
