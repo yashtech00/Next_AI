@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mail, User, Lock } from "lucide-react";
+import { Mail, User, Lock, Github, Chrome } from "lucide-react";
 import { Register } from "@/lib/AxiosInstanxe";
 import { AuthType } from "@/types/AuthType";
 
@@ -23,15 +23,24 @@ export default function UniqueForm() {
         username: name,
       };
       console.log("Form Data Submitted:", formData);
-     const response = await Register(formData);
-     console.log("Server Response:", response);
+      const response = await Register(formData);
+      console.log("Server Response:", response);
     } catch (error) {
       console.error("Error submitting form:", error);
     }
   };
 
+  // 🟢 OAuth Handlers
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:5000/auth/google";
+  };
+
+  const handleGithubLogin = () => {
+    window.location.href = "http://localhost:5000/auth/github";
+  };
+
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <Card className="w-full max-w-md shadow-lg rounded-2xl border border-gray-200">
         <CardHeader>
           <CardTitle className="text-2xl font-semibold text-center text-gray-800">
@@ -95,6 +104,30 @@ export default function UniqueForm() {
               Get Started
             </Button>
           </form>
+
+          <div className="mt-6 flex flex-col gap-3">
+            <div className="text-center text-gray-500 text-sm">or continue with</div>
+
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={handleGoogleLogin}
+                className="flex items-center gap-2 w-full border-gray-300 hover:bg-gray-100"
+              >
+                <Chrome className="w-4 h-4 text-red-500" />
+                Google
+              </Button>
+
+              <Button
+                variant="outline"
+                onClick={handleGithubLogin}
+                className="flex items-center gap-2 w-full border-gray-300 hover:bg-gray-100"
+              >
+                <Github className="w-4 h-4 text-gray-800" />
+                GitHub
+              </Button>
+            </div>
+          </div>
 
           <p className="text-xs text-gray-500 text-center mt-4">
             By continuing, you agree to our{" "}
