@@ -3,6 +3,9 @@
 import { Button } from "@/components/ui/button";
 import { Gift, Bell, User } from "lucide-react";
 import { motion } from "framer-motion";
+import Link from "next/link";
+import { Dialog, DialogTrigger, DialogContent } from "./ui/dialog";
+import Register from "./register";
 
 const navVariants = {
   hidden: { opacity: 0, y: -8 },
@@ -49,13 +52,22 @@ const Navigation = () => {
 
         {/* Right side actions */}
         <motion.div variants={itemVariants} className="flex items-center gap-3">
+          <Link href="/login">
+            <Button variant="ghost" size="icon" className="text-gray-300 hover:text-white hover:bg-white/10 px-10 py-2 gap-2 ">
+              Sign in
+            </Button>
+          </Link>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="bg-black hover:bg-white/10 text-white rounded-lg px-4 py-2 flex items-center gap-2">
+                <span>Get started</span>
+              </Button>
+            </DialogTrigger>
 
-          <Button variant="ghost" size="icon" className="text-gray-300 hover:text-white hover:bg-white/10 px-10 py-2 gap-2 ">
-            Sign in
-          </Button>
-          <Button className="bg-black hover:bg-white/10 text-white rounded-lg px-4 py-2 flex items-center gap-2">
-            Get started
-          </Button>
+            <DialogContent>
+              <Register />
+            </DialogContent>
+          </Dialog>
         </motion.div>
       </div>
     </motion.nav>
