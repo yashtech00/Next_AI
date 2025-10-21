@@ -67,4 +67,21 @@ passport.use(
         }
     )
 )
+
+passport.serializeUser((user, done) => {
+    done(null, (user as any).id);
+});
+
+passport.deserializeUser(async (id, done) => {
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: id as string },
+        });
+        done(null, user);
+    } catch (error) {
+        done(error, null);
+    }
+});
+
+
 export default passport;
