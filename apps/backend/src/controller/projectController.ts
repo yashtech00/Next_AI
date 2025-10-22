@@ -1,6 +1,7 @@
 import type { Request } from "express";
 import type { Response } from "express";
-import {prisma} from "db/client";
+import {prisma} from "db/client"
+
 
 export const createProject = async (req:any, res:any) => {
     try {
