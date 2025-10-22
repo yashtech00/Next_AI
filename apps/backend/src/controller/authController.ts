@@ -60,7 +60,7 @@ export const oauthCallback = (req: Request, res: Response) => {
   });
 
   res.cookie("jwt", token, { httpOnly: true });
-  res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
+  res.redirect(`${process.env.FRONTEND_URL}`);
 };
 
 

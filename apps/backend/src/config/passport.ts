@@ -4,6 +4,18 @@ import { Strategy as GithubStrategy } from "passport-github2";
 import { prisma } from "db/client";
 import bcrypt from "bcrypt";
 
+interface UserProfile {
+    id: string;
+    email: string;
+    providerId: string | null;
+    name: string;
+    password: string;
+    createdAt: Date;
+    updatedAt: Date;
+    avatar: string | null;
+    provider: string | null;
+}
+
 passport.use(
   new GoogleStrategy(
     {
@@ -69,7 +81,7 @@ passport.use(
         emails: { value: any }[];
         photos: { value: any }[];
       },
-      done: (arg0: unknown, arg1: undefined) => void
+      done: (error: unknown, user?: UserProfile | null) => void
     ) => {
       try {
         let user = await prisma.user.findUnique({ where: { providerId: profile.id } });
