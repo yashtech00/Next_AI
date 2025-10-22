@@ -12,7 +12,7 @@ AuthRouter.post("/login", login);
 AuthRouter.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 AuthRouter.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/auth/failure" }),
+  passport.authenticate("google", { failureRedirect: "/api/v1/auth/failure" }),
   oauthCallback
 );
 
@@ -20,7 +20,7 @@ AuthRouter.get(
 AuthRouter.get("/github", passport.authenticate("github", { scope: ["user:email"] }));
 AuthRouter.get(
   "/github/callback",
-  passport.authenticate("github", { failureRedirect: "/auth/failure" }),
+  passport.authenticate("github", { failureRedirect: "/api/v1/auth/failure" }),
   oauthCallback
 );
 

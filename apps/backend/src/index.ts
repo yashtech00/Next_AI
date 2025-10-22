@@ -1,9 +1,14 @@
+import dotenv from "dotenv";
+// Load env vars as early as possible so modules (Prisma, passport strategies, etc.) can read them
+dotenv.config();
+
 import express from "express";
 import ProjectRouter from "./routes/projectRoutes";
 import AuthRouter from "./routes/authRoutes";
 import cors from "cors";
-import passport, { session } from "passport";
-import dotenv from "dotenv";
+import passport from "passport";
+import "./config/passport";
+import session from "express-session";
 import cookieParser from "cookie-parser";
 const app = express();
 

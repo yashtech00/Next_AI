@@ -32,11 +32,11 @@ export default function UniqueForm() {
 
   // 🟢 OAuth Handlers
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:5000/auth/google";
+    window.location.href = "http://localhost:8080/api/v1/auth/google";
   };
 
   const handleGithubLogin = () => {
-    window.location.href = "http://localhost:5000/auth/github";
+    window.location.href = "http://localhost:8080/api/v1/auth/github";
   };
 
   return (
