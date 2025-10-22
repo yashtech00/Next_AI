@@ -2,8 +2,7 @@ import {prisma} from "db/client";
 import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { sendMagicLinkEmail } from "../utils/sendEmail";
-import { generateMagicToken, verifyMagicToken } from "../utils/jwt";
+
 
 export const register = async (req: Request, res: Response) => {
     try {
@@ -60,46 +59,24 @@ export const oauthCallback = (req: Request, res: Response) => {
   });
 
   res.cookie("jwt", token, { httpOnly: true });
-  res.redirect(`${process.env.FRONTEND_URL}`);
+  res.redirect(`${process.env.FRONTEND_URL}/?token=${token}`);
 };
 
 
-// export const sendMagicLink = async (req: Request, res: Response) => {
-//     const { email } = req.body;
-  
-//     // Check if user exists, otherwise create
-//     let user = await prisma.user.findUnique({ where: { email } });
-//     if (!user) {
-//       user = await prisma.user.create({ data: { email } });
-//     }
-  
-//     // Generate token
-//     const token = generateMagicToken(email);
-  
-//     // Build magic link
-//     const magicLink = `${process.env.FRONTEND_URL}/api/auth/magic/verify?token=${token}`;
-  
-//     // Send email
-//     await sendMagicLinkEmail(email, magicLink);
-  
-//     res.json({ message: "Magic link sent to your email!" });
-//   };
-  
-//   export const verifyMagicLink = async (req: Request, res: Response) => {
-//     const { token } = req.query;
-  
-//     const payload = verifyMagicToken(token as string);
-//     if (!payload) {
-//       return res.status(400).json({ error: "Invalid or expired link" });
-//     }
-  
-//     const user = await prisma.user.findUnique({ where: { email: payload.email } });
-//     if (!user) {
-//       return res.status(404).json({ error: "User not found" });
-//     }
-  
-//     // Create a session token (for frontend cookies or JWT)
-//     const authToken = generateMagicToken(user.email); // You can use a longer expiry here
-  
-//     res.json({ message: "Authenticated successfully!", token: authToken });
-//   };
+export const logout = (req: Request, res: Response) => {
+  try {
+    // Clear the JWT cookie
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      path: "/",          // Make sure path matches how cookie was set
+      sameSite: "lax",    // Optional: match your login cookie settings
+      secure: process.env.NODE_ENV === "production",
+    });
+
+    // Optional: also return JSON response
+    return res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Failed to logout user" });
+  }
+};

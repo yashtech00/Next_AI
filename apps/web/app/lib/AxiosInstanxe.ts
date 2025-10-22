@@ -5,7 +5,7 @@ import axios from "axios";
 
 
 export const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000/api/v1",
+  baseURL: "http://localhost:8080/api/v1",
   headers: {
     "Content-Type": "application/json",
   },
@@ -31,4 +31,23 @@ export const Register = async (formData: AuthType) => {
   }
 };
 
+export const Login = async (formData: AuthType) => {
+  try {
+    const response = await axiosInstance.post("/auth/login", formData); 
+    return response.data;
+  } catch (error) {
+    console.error("Error during login:", error);
+    throw error;
+  } 
+
+};
+export const Logout = async () => {
+  try {
+    const response = await axiosInstance.post("/auth/logout", {}, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    console.error("Error during logout:", error);
+    throw error;
+  }
+};
 

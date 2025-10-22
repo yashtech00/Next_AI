@@ -1,14 +1,14 @@
 import { Router } from "express";
 import passport from "passport";
-import { register, login, oauthCallback } from "../controller/authController";
+import { register, login, oauthCallback, logout } from "../controller/authController";
 
 const AuthRouter = Router();
 
-// 🟢 Local Auth
+
 AuthRouter.post("/register", register);
 AuthRouter.post("/login", login);
 
-// 🟠 Google OAuth
+
 AuthRouter.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 AuthRouter.get(
   "/google/callback",
@@ -16,7 +16,7 @@ AuthRouter.get(
   oauthCallback
 );
 
-// 🟣 GitHub OAuth
+
 AuthRouter.get("/github", passport.authenticate("github", { scope: ["user:email"] }));
 AuthRouter.get(
   "/github/callback",
@@ -25,5 +25,7 @@ AuthRouter.get(
 );
 
 AuthRouter.get("/failure", (_, res) => res.send("OAuth login failed"));
+
+AuthRouter.post("/logout", logout);
 
 export default AuthRouter;
