@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { Button } from "./ui/button";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { fetchProjects } from "@/lib/AxiosInstanxe";
 
 const panelVariants: any = {
     hidden: { x: "-100%", transition: { type: "spring", stiffness: 300, damping: 30 } },
@@ -18,6 +18,20 @@ const listVariants = {
 export const Sidebar = () => {
     const [open, setOpen] = useState(false);
     const timerRef = useRef<number | null>(null);
+    const [projects, setProjects] = useState<any[]>([]);
+
+    useEffect(() => {
+        const loadProjects = async () => {
+            try {
+                const res = await fetchProjects();
+                setProjects(res);
+            } catch (e) {
+                console.error("Sidebar error:", e);
+            }
+        };
+
+        loadProjects();
+    }, []);
 
     const handleEnter = () => {
         if (timerRef.current) {
@@ -34,7 +48,11 @@ export const Sidebar = () => {
     return (
         <>
             {/* thin hover zone at left edge */}
-            <div aria-hidden onPointerEnter={handleEnter} className="fixed left-0 top-0 bottom-0 w-4 z-20" />
+            <div
+                aria-hidden
+                onPointerEnter={handleEnter}
+                className="fixed left-0 top-0 bottom-0 w-4 z-20"
+            />
 
             <AnimatePresence>
                 {open && (
@@ -45,20 +63,16 @@ export const Sidebar = () => {
                         variants={panelVariants}
                         onPointerEnter={handleEnter}
                         onPointerLeave={handleLeave}
-                        className="fixed left-0 top-0 bottom-0 w-72 z-[9999] bg-black text-white shadow-2xl  flex flex-col gap-3 "
+                        className="fixed left-0 top-0 bottom-0 w-72 z-[9999] bg-black text-white shadow-2xl flex flex-col gap-3"
                         aria-label="Sidebar"
                     >
                         <motion.h2 className="m-0 text-lg p-4 flex items-center" variants={listVariants} custom={1}>
                             Next Ai
                         </motion.h2>
                         <motion.hr variants={listVariants} custom={1} className="w-full border-t border-slate-700 mt-1" />
-                     
-                        <nav aria-label="Main ">
-                            <ul className="mt-2 p-0 list-none p-4">
-                                {/* <motion.li className="py-2" variants={listVariants} custom={2}>
-                                    <Button>New Chat</Button>
-                                </motion.li> */}
 
+                        <nav aria-label="Main">
+                            <ul className="mt-2 list-none p-4">
                                 <motion.li className="py-2" variants={listVariants} custom={3}>
                                     <input
                                         type="text"
@@ -69,6 +83,14 @@ export const Sidebar = () => {
 
                                 <motion.li className="py-2" variants={listVariants} custom={4}>
                                     Your chats
+                                    {projects.map((project, index) => (
+                                        <div
+                                            key={project.id}
+                                            className="py-1 px-2 rounded hover:bg-slate-700 cursor-pointer"
+                                        >
+                                            {project.name || `Project ${index + 1}`}
+                                        </div>
+                                    ))}
                                 </motion.li>
                             </ul>
                         </nav>

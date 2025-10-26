@@ -61,7 +61,7 @@ export const createProject = async (promptData: string) => {
   } 
 };
 
-export const fetchPrompts = async () => {
+export const fetchProjects = async () => {
   try {
     const response = await axiosInstance.get("/get-projects",{  withCredentials: true });
     return response.data;
@@ -71,7 +71,7 @@ export const fetchPrompts = async () => {
   }
 };
 
-export const fetchPromptById = async (id: string) => {
+export const fetchProjectById = async (id: string) => {
   try {
     const response = await axiosInstance.get(`/get-project/${id}`,{  withCredentials: true });
     return response.data;
@@ -81,7 +81,7 @@ export const fetchPromptById = async (id: string) => {
   }
 };
 
-export const deletePrompt = async (id: string) => {
+export const deleteProject = async (id: string) => {
   try {
     const response = await axiosInstance.delete(`/delete-project/${id}`,{  withCredentials: true });
     return response.data;
