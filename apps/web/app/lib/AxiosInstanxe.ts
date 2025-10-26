@@ -51,3 +51,42 @@ export const Logout = async () => {
   }
 };
 
+export const createProject = async (promptData: string) => {
+  try {
+    const response = await axiosInstance.post("/create-project", { prompt: promptData },{ withCredentials: true });
+    return response.data;
+  } catch (error) {
+    console.error("Error creating project:", error);
+    throw error;
+  } 
+};
+
+export const fetchPrompts = async () => {
+  try {
+    const response = await axiosInstance.get("/get-projects",{  withCredentials: true });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching prompts:", error);
+    throw error;
+  }
+};
+
+export const fetchPromptById = async (id: string) => {
+  try {
+    const response = await axiosInstance.get(`/get-project/${id}`,{  withCredentials: true });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching prompt by ID:", error);
+    throw error;
+  }
+};
+
+export const deletePrompt = async (id: string) => {
+  try {
+    const response = await axiosInstance.delete(`/delete-project/${id}`,{  withCredentials: true });
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting prompt:", error);
+    throw error;
+  }
+};

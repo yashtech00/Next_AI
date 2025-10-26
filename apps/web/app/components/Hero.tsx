@@ -6,6 +6,7 @@ import { Paperclip, Globe, Mic, ArrowUp } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Sidebar } from "./sidebar";
 import { motion } from "framer-motion";
+import { createProject } from "@/lib/AxiosInstanxe";
 
 // ------------------ Typewriter Hook ------------------
 interface TypewriterOptions {
@@ -72,6 +73,15 @@ const fadeUp = {
 const Hero = () => {
   const [inputValue, setInputValue] = useState("");
 
+  const handlePromptSubmit = () => {
+    try{
+      const res = createProject(inputValue);
+      setInputValue("");
+    }catch(e){
+      console.error("Error creating prompt:", e);
+    }
+  }
+
   // Typewriter placeholder
   const placeholderText = useTypewriter({
     words: [
@@ -107,7 +117,9 @@ const Hero = () => {
         </motion.div>
 
         {/* Input Box */}
-        <motion.div className="w-full max-w-3xl mx-auto" variants={fadeUp}>
+        <motion.div className="w-full max-w-3xl mx-auto" variants={fadeUp}
+          
+        >
           <div className="rounded-3xl p-6 backdrop-blur-sm bg-black shadow-lg">
             <div className="flex flex-col gap-4">
               <Input
@@ -150,6 +162,7 @@ const Hero = () => {
                     size="icon"
                     className="bg-gray-600 hover:bg-gray-500 text-white rounded-full"
                     disabled={!inputValue}
+                    onSubmit={handlePromptSubmit}
                   >
                     <ArrowUp className="h-5 w-5" />
                   </Button>
