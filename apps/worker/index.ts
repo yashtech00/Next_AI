@@ -2,7 +2,7 @@ import express from "express";
 import { prisma } from "db/client";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { SystemPrompt } from "./systemPrompt";
-import { s3 } from "../lib/s3Client.js";
+import { s3 } from "./lib/s3Client";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 const app = express();
