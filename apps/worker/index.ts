@@ -1,15 +1,16 @@
 import express from "express";
 import { prisma } from "db/client";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { SystemPrompt } from "./systemPrompt";
-import { s3 } from "./lib/s3Client";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+
 
 const app = express();
 app.use(express.json());
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-const BUCKET_NAME = process.env.AWS_BUCKET_NAME;
+const s3 = new S3Client({ region: process.env.AWS_REGION });
+const BUCKET_NAME = process.env.AWS_BUCKET_NAME!;
+const SystemPrompt = "You are a helpful AI coding assistant.";
 
 // STREAM + SAVE to S3
 app.post("/prompt", async (req, res) => {
@@ -20,15 +21,29 @@ app.post("/prompt", async (req, res) => {
       return res.status(400).json({ error: "Missing prompt or projectId" });
     }
 
-    // Save user prompt in DB
-    await prisma.prompt.create({
-      data: { project_id: projectId, content: prompt },
-    });
-
     // Collect chat history
     const allPrompts = await prisma.prompt.findMany({
       where: { project_id: projectId },
       orderBy: { createdAt: "asc" },
+    });
+
+    // Save user prompt in DB
+    await prisma.prompt.create({
+      data: {
+        project_id: projectId,
+        content: prompt,
+      },
+    });
+
+    // Save conversation (USER message)
+    await prisma.conversationHistory.create({
+      data: {
+        project_id: projectId,
+        type: "TEXT_MESSAGE",
+        from: "USER",
+        contents: prompt,
+        hidden: false,
+      },
     });
 
     // Prepare messages for Gemini
@@ -41,60 +56,68 @@ app.post("/prompt", async (req, res) => {
       { role: "user", content: prompt },
     ];
 
-    // Stream setup
+    // --- Your artifact logic preserved ---
+    const artifactProcess = new ArtifactProcessor("", onFileupdate, onShellCommand(""));
+    let artifact = "";
+
+    const Client = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+
+    const stream = await Client.generateContentStream({
+      contents: messages.map((m) => ({
+        role: m.role,
+        parts: [{ text: m.content }],
+      })),
+    });
+
+    // SSE streaming setup
     res.setHeader("Content-Type", "text/event-stream");
-    res.setHeader("Cache-Control", "no-cache, no-transform");
+    res.setHeader("Cache-Control", "no-cache");
     res.setHeader("Connection", "keep-alive");
-    res.flushHeaders?.();
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
-    const contents = messages.map((m) => ({
-      role: m.role,
-      parts: [{ text: m.content }],
-    }));
-
-    const result = await model.generateContentStream({ contents });
-
-    let codeBuffer = "";
-
-    // Stream token-by-token
-    for await (const chunk of result.stream) {
-      const token = chunk.text();
-      if (token) {
-        // 1️⃣ Send token to frontend
-        res.write(`data: ${token}\n\n`);
-
-        // 2️⃣ Append to local buffer
-        codeBuffer += token;
-
-        // 3️⃣ Periodically auto-save to S3
-        if (codeBuffer.length > 2000) {
-          await s3.send(
-            new PutObjectCommand({
-              Bucket: BUCKET_NAME,
-              Key: `projects/${projectId}/${filePath}`,
-              Body: codeBuffer,
-              ContentType: "text/plain",
-            })
-          );
-          codeBuffer = ""; // reset buffer
-        }
+    for await (const chunk of stream.stream) {
+      const text = chunk.text();
+      if (text) {
+        artifactProcess.append(text);
+        artifactProcess.parse();
+        artifact += text;
+        res.write(`data: ${text}\n\n`);
       }
     }
 
-    // Final save of remaining content
-    if (codeBuffer.length > 0) {
+    console.log("done!");
+
+    // Save Gemini response
+    await prisma.prompt.create({
+      data: {
+        project_id: projectId,
+        content: artifact,
+      },
+    });
+
+    // Save conversation (ASSISTANT message)
+    await prisma.conversationHistory.create({
+      data: {
+        project_id: projectId,
+        type: "TEXT_MESSAGE",
+        from: "ASSISTANT",
+        contents: artifact,
+        hidden: false,
+      },
+    });
+
+    // Final save to S3
+    if (artifact && artifact.length > 0) {
       await s3.send(
         new PutObjectCommand({
           Bucket: BUCKET_NAME,
           Key: `projects/${projectId}/${filePath}`,
-          Body: codeBuffer,
+          Body: artifact,
           ContentType: "text/plain",
         })
       );
     }
 
-    // Save AI response to DB
+    // Save confirmation message
     await prisma.prompt.create({
       data: {
         project_id: projectId,
@@ -111,3 +134,48 @@ app.post("/prompt", async (req, res) => {
 });
 
 export default app;
+
+
+
+
+
+    // // Stream setup
+    // res.setHeader("Content-Type", "text/event-stream");
+    // res.setHeader("Cache-Control", "no-cache, no-transform");
+    // res.setHeader("Connection", "keep-alive");
+    // res.flushHeaders?.();
+
+    // const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+    // const contents = messages.map((m) => ({
+    //   role: m.role,
+    //   parts: [{ text: m.content }],
+    // }));
+
+    // const result = await model.generateContentStream({ contents });
+
+    // let codeBuffer = "";
+
+    // // Stream token-by-token
+    // for await (const chunk of result.stream) {
+    //   const token = chunk.text();
+    //   if (token) {
+    //     // 1️⃣ Send token to frontend
+    //     res.write(`data: ${token}\n\n`);
+
+    //     // 2️⃣ Append to local buffer
+    //     codeBuffer += token;
+
+    //     // 3️⃣ Periodically auto-save to S3
+    //     if (codeBuffer.length > 2000) {
+    //       await s3.send(
+    //         new PutObjectCommand({
+    //           Bucket: BUCKET_NAME,
+    //           Key: `projects/${projectId}/${filePath}`,
+    //           Body: codeBuffer,
+    //           ContentType: "text/plain",
+    //         })
+    //       );
+    //       codeBuffer = ""; // reset buffer
+    //     }
+    //   }
+    // }
