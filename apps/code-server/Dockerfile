@@ -13,5 +13,7 @@ USER coder
 
 EXPOSE 8080
 
+RUN mkdir -p /home/coder/project
+
 # Start code-server without authentication
-CMD ["code-server", "--auth", "none", "--bind-addr", "0.0.0.0:8091"]
+CMD ["code-server", "--auth", "none", "--bind-addr", "0.0.0.0:8091","/home/coder/project"]
