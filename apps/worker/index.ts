@@ -2,6 +2,8 @@ import express from "express";
 import { prisma } from "db/client";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { ArtifactProcessor } from "./parser";
+import { onFileUpdate, onShellCommand } from "./os";
 
 
 const app = express();
@@ -57,8 +59,9 @@ app.post("/prompt", async (req, res) => {
     ];
 
     // --- Your artifact logic preserved ---
-    const artifactProcess = new ArtifactProcessor("", onFileupdate, onShellCommand(""));
-    let artifact = "";
+  
+  let artifactProcess = new ArtifactProcessor("", (filePath, fileContent) => onFileUpdate(filePath, fileContent, projectId, promptDb.id, project.type), (shellCommand) => onShellCommand(shellCommand, projectId, promptDb.id));
+  let artifact = "";
 
     const Client = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
