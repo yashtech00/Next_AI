@@ -47,6 +47,7 @@
       "name": "k8",
       "dependencies": {
         "@kubernetes/client-node": "^1.4.0",
+        "@types/cors": "^2.8.19",
         "@types/express": "^5.0.5",
         "cors": "^2.8.5",
         "express": "^5.1.0",

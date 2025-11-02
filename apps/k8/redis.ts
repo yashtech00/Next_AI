@@ -1,12 +1,12 @@
-import { redis } from "bun";
+import { createClient,  } from "redis";
 
 
-const redisClient = new redis({
+export const redisClient =  createClient({
   url: process.env.REDIS_URL,
 });
 
 export async function adNewPod(pod:string){
-    await redisClient.hset("POD_MAPPING", pod,"empty");
+    await redisClient.hSet("POD_MAPPING", pod,"empty");
     await redisClient.expire("POD_MAPPING", 300);
 }
 
@@ -15,11 +15,11 @@ export async function removePod(pod:string){
 }
 
 export async function getAllPods():Promise<{[key:string]:string}>{
-    const allPods = await redisClient.hgetall("POD_MAPPING");
+    const allPods = await redisClient.hGetAll("POD_MAPPING");
     return allPods;
 }
 
 export async function addProjectToPod(projectId:string,pod:string){
-    await redisClient.hset("POD_MAPPING", pod, projectId);
+    await redisClient.hSet("POD_MAPPING", pod, projectId);
     await redisClient.expire("POD_MAPPING", 300);
 }
