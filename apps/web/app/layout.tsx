@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Doto } from "next/font/google";
 import "./globals.css";
-import { Sidebar } from "./components/sidebar";
 import { OAuthTokenStore } from "./lib/oAuthstoretoken";
+import Sidebar from "./components/sidebar";
 
 const inter = Inter({
   subsets: ["latin"],

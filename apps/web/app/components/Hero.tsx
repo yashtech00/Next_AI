@@ -76,15 +76,15 @@ const Hero = () => {
 
   const router = useRouter();
 
-  const handlePromptSubmit = () => {
+  const handlePromptSubmit = async () => {
     try{
       console.log("----------click ------------");
       
-      const res = createProject(inputValue);
+      const res = await createProject(inputValue);
       setInputValue("");
       console.log(res,'yash res create project');
       
-      router.push(`/project/${res.data.id}`);
+      router.push(`/project/${res.projectId}`);
     }catch(e){
       console.error("Error creating prompt:", e);
     }
