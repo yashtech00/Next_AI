@@ -69,126 +69,128 @@ useEffect(() => {
 
 
 
-  return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <Card className="w-full max-w-md shadow-lg rounded-2xl border border-gray-200">
-        <CardHeader>
-          <CardTitle className="text-2xl font-semibold text-center text-gray-800">
-            {token ? "Welcome!" : "Create Your Account"}
-          </CardTitle>
-          <p className="text-center text-sm text-gray-500 mt-1">
-            {token
-              ? "You are logged in."
-              : "Sign up and start exploring features tailored just for you."}
-          </p>
-        </CardHeader>
-        <CardContent>
-          {token ? (
-            <div className="flex flex-col items-center gap-4">
-              <Button
-                variant="outline"
-                onClick={handleLogout}
-                className="flex items-center gap-2 w-full border-gray-300 hover:bg-gray-100"
-              >
-                <LogOut className="w-4 h-4 text-gray-800" />
-                Logout
-              </Button>
-            </div>
-          ) : (
-            <>
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div>
-                  <Label htmlFor="name">Full Name</Label>
-                  <div className="flex items-center gap-2 border rounded-lg px-3 py-2 bg-white">
-                    <User className="w-4 h-4 text-gray-500" />
-                    <Input
-                      id="name"
-                      type="text"
-                      placeholder="John Doe"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="border-0 focus-visible:ring-0 focus-visible:outline-none shadow-none"
-                    />
-                  </div>
-                </div>
+ return (
+  <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
+    <Card className="w-full max-w-lg shadow-xl rounded-2xl border border-gray-200 bg-white">
+      <CardHeader className="pt-8 pb-4">
+        <CardTitle className="text-3xl font-semibold text-center text-gray-900 tracking-tight">
+          {token ? "Welcome Back 👋" : "Create Your Account"}
+        </CardTitle>
+        <p className="text-center text-sm text-gray-500 mt-2">
+          {token
+            ? "You are successfully logged in."
+            : "Sign up to continue & unlock your personalized dashboard."}
+        </p>
+      </CardHeader>
 
-                <div>
-                  <Label htmlFor="email">Email Address</Label>
-                  <div className="flex items-center gap-2 border rounded-lg px-3 py-2 bg-white">
-                    <Mail className="w-4 h-4 text-gray-500" />
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="you@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="border-0 focus-visible:ring-0 focus-visible:outline-none shadow-none"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="password">Password</Label>
-                  <div className="flex items-center gap-2 border rounded-lg px-3 py-2 bg-white">
-                    <Lock className="w-4 h-4 text-gray-500" />
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="border-0 focus-visible:ring-0 focus-visible:outline-none shadow-none"
-                    />
-                  </div>
-                </div>
-
-                <Button
-                  type="submit"
-                  className="w-full rounded-xl hover:cursor-pointer text-white font-medium shadow-md"
-                >
-                  Get Started
-                </Button>
-              </form>
-
-              <div className="mt-6 flex flex-col gap-3">
-                <div className="text-center text-gray-500 text-sm">or continue with</div>
-
-                <div className="flex gap-3">
-                  <Button
-                    variant="outline"
-                    onClick={handleGoogleLogin}
-                    className="flex items-center gap-2 w-full border-gray-300 hover:bg-gray-100"
-                  >
-                    <Chrome className="w-4 h-4 text-red-500" />
-                    Google
-                  </Button>
-
-                  <Button
-                    variant="outline"
-                    onClick={handleGithubLogin}
-                    className="flex items-center gap-2 w-full border-gray-300 hover:bg-gray-100"
-                  >
-                    <Github className="w-4 h-4 text-gray-800" />
-                    GitHub
-                  </Button>
+      <CardContent className="px-7 pb-8">
+        {token ? (
+          <div className="flex flex-col items-center gap-6">
+            <Button
+              variant="outline"
+              onClick={handleLogout}
+              className="flex items-center gap-2 w-full border-gray-300 hover:bg-gray-100 h-11 rounded-xl"
+            >
+              <LogOut className="w-4 h-4 text-gray-800" />
+              Logout
+            </Button>
+          </div>
+        ) : (
+          <>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-1.5">
+                <Label htmlFor="name">Full Name</Label>
+                <div className="flex items-center gap-2 border rounded-xl px-3 py-2.5 bg-white">
+                  <User className="w-4 h-4 text-gray-500" />
+                  <Input
+                    id="name"
+                    type="text"
+                    placeholder="John Doe"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="border-0 focus-visible:ring-0 focus-visible:outline-none shadow-none"
+                  />
                 </div>
               </div>
 
-              <p className="text-xs text-gray-500 text-center mt-4">
-                By continuing, you agree to our{" "}
-                <span className="text-indigo-600 font-medium cursor-pointer hover:underline">
-                  Terms of Service
-                </span>{" "}
-                and{" "}
-                <span className="text-indigo-600 font-medium cursor-pointer hover:underline">
-                  Privacy Policy
-                </span>
-                .
-              </p>
-            </>
-          )}
-        </CardContent>
-      </Card>
-    </div>
-  );
+              <div className="space-y-1.5">
+                <Label htmlFor="email">Email Address</Label>
+                <div className="flex items-center gap-2 border rounded-xl px-3 py-2.5 bg-white">
+                  <Mail className="w-4 h-4 text-gray-500" />
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="border-0 focus-visible:ring-0 focus-visible:outline-none shadow-none"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="password">Password</Label>
+                <div className="flex items-center gap-2 border rounded-xl px-3 py-2.5 bg-white">
+                  <Lock className="w-4 h-4 text-gray-500" />
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="border-0 focus-visible:ring-0 focus-visible:outline-none shadow-none"
+                  />
+                </div>
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full h-11 rounded-xl text-white font-medium shadow-md"
+              >
+                Get Started
+              </Button>
+            </form>
+
+            <div className="mt-7 flex flex-col gap-3">
+              <div className="text-center text-gray-500 text-sm">or continue with</div>
+
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  onClick={handleGoogleLogin}
+                  className="flex items-center gap-2 w-full border-gray-300 hover:bg-gray-100 h-11 rounded-xl"
+                >
+                  <Chrome className="w-4 h-4 text-red-500" />
+                  Google
+                </Button>
+
+                <Button
+                  variant="outline"
+                  onClick={handleGithubLogin}
+                  className="flex items-center gap-2 w-full border-gray-300 hover:bg-gray-100 h-11 rounded-xl"
+                >
+                  <Github className="w-4 h-4 text-gray-800" />
+                  GitHub
+                </Button>
+              </div>
+            </div>
+
+            <p className="text-xs text-gray-500 text-center mt-6 leading-5 px-4">
+              By continuing, you agree to our{" "}
+              <span className="text-indigo-600 font-medium cursor-pointer hover:underline">
+                Terms of Service
+              </span>{" "}
+              and{" "}
+              <span className="text-indigo-600 font-medium cursor-pointer hover:underline">
+                Privacy Policy
+              </span>
+              .
+            </p>
+          </>
+        )}
+      </CardContent>
+    </Card>
+  </div>
+);
+
 }

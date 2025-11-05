@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Dialog, DialogTrigger, DialogContent } from "./ui/dialog";
+import { Dialog, DialogTrigger, DialogContent, DialogTitle } from "./ui/dialog";
 import Register from "./register";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -60,10 +60,11 @@ useEffect(() => {
               <Dialog>
                 <DialogTrigger asChild>
                   <Button className="bg-black hover:bg-white/10 text-white rounded-lg px-4 py-2 flex items-center gap-2">
-                    <span>Get started</span>
+                    <span>
+                      <DialogTitle className="font-sans">Get started</DialogTitle></span>
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent aria-describedby={undefined}>
                   <Register />
                 </DialogContent>
               </Dialog>
