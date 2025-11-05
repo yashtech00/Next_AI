@@ -1,5 +1,4 @@
-import Hero from "./components/Hero";
-import Navigation from "./components/Navigation";
+
 import Landing from "./Landing/page";
 
 

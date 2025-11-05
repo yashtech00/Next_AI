@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { Sidebar } from "./sidebar";
 import { motion } from "framer-motion";
 import { createProject } from "@/lib/AxiosInstanxe";
+import { useRouter } from "next/navigation";
 
 // ------------------ Typewriter Hook ------------------
 interface TypewriterOptions {
@@ -73,10 +74,17 @@ const fadeUp = {
 const Hero = () => {
   const [inputValue, setInputValue] = useState("");
 
+  const router = useRouter();
+
   const handlePromptSubmit = () => {
     try{
+      console.log("----------click ------------");
+      
       const res = createProject(inputValue);
       setInputValue("");
+      console.log(res,'yash res create project');
+      
+      router.push(`/project/${res.data.id}`);
     }catch(e){
       console.error("Error creating prompt:", e);
     }
@@ -162,7 +170,7 @@ const Hero = () => {
                     size="icon"
                     className="bg-gray-600 hover:bg-gray-500 text-white rounded-full"
                     disabled={!inputValue}
-                    onSubmit={handlePromptSubmit}
+                    onClick={handlePromptSubmit}
                   >
                     <ArrowUp className="h-5 w-5" />
                   </Button>

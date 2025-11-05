@@ -5,13 +5,28 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { Dialog, DialogTrigger, DialogContent } from "./ui/dialog";
 import Register from "./register";
-import { Logout } from "@/lib/AxiosInstanxe"; // Frontend API call
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
 
 export default function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
+
+  const router = useRouter();
+
+const [token, setToken] = useState<string | null>(null);
+
+useEffect(() => {
+  const storedToken = localStorage.getItem("token");
+  if (storedToken) {
+    setToken(storedToken);
+  }
+}, []);
+
+
   const handleLogout = async () => {
     try {
-      await Logout();  // ✅ wait for API call
-      window.location.href = "/"; // redirect after logout
+      localStorage.removeItem("token");
+     router.push('/'); // Redirect to home or login page
     } catch (error) {
       console.error("Logout failed:", error);
     }
@@ -35,7 +50,7 @@ export default function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
         </div>
 
         <div className="flex items-center gap-3">
-          {!isLoggedIn ? (
+          {!token ? (
             <>
               <Link href="/login">
                 <Button variant="ghost" className="text-gray-300 hover:text-white">

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Doto } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "./components/sidebar";
+import { OAuthTokenStore } from "./lib/oAuthstoretoken";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,8 +29,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${doto.variable}`}>
-      <Sidebar />
-      <body>{children}</body>
+      <body>
+        <Sidebar />
+         <OAuthTokenStore />
+        {children}
+      </body>
     </html>
   );
 }

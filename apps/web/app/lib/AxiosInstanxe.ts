@@ -1,9 +1,6 @@
 import { AuthType } from "@/types/AuthType";
 import axios from "axios";
 
-
-
-
 export const axiosInstance = axios.create({
   baseURL: "http://localhost:8080/api/v1",
   headers: {
@@ -11,7 +8,7 @@ export const axiosInstance = axios.create({
   },
 });
 
-export default  axiosInstance.interceptors.request.use((config => {
+export default axiosInstance.interceptors.request.use((config) => {
   // You can add authorization headers or other custom headers here
   // For example, if you have a token stored in localStorage:
   const token = localStorage.getItem("token");
@@ -19,7 +16,7 @@ export default  axiosInstance.interceptors.request.use((config => {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
-}));
+});
 
 export const Register = async (formData: AuthType) => {
   try {
@@ -33,17 +30,20 @@ export const Register = async (formData: AuthType) => {
 
 export const Login = async (formData: AuthType) => {
   try {
-    const response = await axiosInstance.post("/auth/login", formData); 
+    const response = await axiosInstance.post("/auth/login", formData);
     return response.data;
   } catch (error) {
     console.error("Error during login:", error);
     throw error;
-  } 
-
+  }
 };
 export const Logout = async () => {
   try {
-    const response = await axiosInstance.post("/auth/logout", {}, { withCredentials: true });
+    const response = await axiosInstance.post(
+      "/auth/logout",
+      {},
+      { withCredentials: true }
+    );
     return response.data;
   } catch (error) {
     console.error("Error during logout:", error);
@@ -53,17 +53,31 @@ export const Logout = async () => {
 
 export const createProject = async (promptData: string) => {
   try {
-    const response = await axiosInstance.post("/create-project", { prompt: promptData },{ withCredentials: true });
+    const response = await axiosInstance.post(
+      "/projects/create-project",
+      { prompt: promptData },
+      {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // or sessionStorage
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Error creating project:", error);
     throw error;
-  } 
+  }
 };
 
 export const fetchProjects = async () => {
   try {
-    const response = await axiosInstance.get("/get-projects",{  withCredentials: true });
+    const response = await axiosInstance.get("/projects/get-projects", {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // or sessionStorage
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching prompts:", error);
@@ -73,7 +87,12 @@ export const fetchProjects = async () => {
 
 export const fetchProjectById = async (id: string) => {
   try {
-    const response = await axiosInstance.get(`/get-project/${id}`,{  withCredentials: true });
+    const response = await axiosInstance.get(`/get-project/${id}`, {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // or sessionStorage
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching prompt by ID:", error);
@@ -83,7 +102,12 @@ export const fetchProjectById = async (id: string) => {
 
 export const deleteProject = async (id: string) => {
   try {
-    const response = await axiosInstance.delete(`/delete-project/${id}`,{  withCredentials: true });
+    const response = await axiosInstance.delete(`/delete-project/${id}`, {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // or sessionStorage
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Error deleting prompt:", error);

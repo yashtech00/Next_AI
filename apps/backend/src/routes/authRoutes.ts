@@ -26,6 +26,5 @@ AuthRouter.get(
 
 AuthRouter.get("/failure", (_, res) => res.send("OAuth login failed"));
 
-AuthRouter.post("/logout", logout);
 
 export default AuthRouter;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,7 +38,7 @@ export default function UniqueForm() {
     }
   };
 
-  // 🟢 OAuth Handlers
+  //  OAuth Handlers
   const handleGoogleLogin = () => {
     window.location.href = "http://localhost:8080/api/v1/auth/google";
   };
@@ -53,15 +53,21 @@ export default function UniqueForm() {
   };
 
   // Listen for token in URL after OAuth
+
+
+useEffect(() => {
   if (typeof window !== "undefined") {
     const params = new URLSearchParams(window.location.search);
     const oauthToken = params.get("token");
-    if (oauthToken && !token) {
+    if (oauthToken) {
       localStorage.setItem("token", oauthToken);
       setToken(oauthToken);
       window.history.replaceState({}, document.title, window.location.pathname);
     }
   }
+}, []);
+
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
