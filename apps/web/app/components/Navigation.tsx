@@ -57,14 +57,14 @@ useEffect(() => {
                   Sign in
                 </Button>
               </Link>
-              <Dialog>
+              <Dialog  >
                 <DialogTrigger asChild>
                   <Button className="bg-black hover:bg-white/10 text-white rounded-lg px-4 py-2 flex items-center gap-2">
                     <span>
                       <DialogTitle className="font-sans">Get started</DialogTitle></span>
                   </Button>
                 </DialogTrigger>
-                <DialogContent aria-describedby={undefined}>
+                <DialogContent aria-describedby={undefined} >
                   <Register />
                 </DialogContent>
               </Dialog>

@@ -70,11 +70,11 @@ useEffect(() => {
 
 
  return (
-  <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
-    <Card className="w-full max-w-lg shadow-xl rounded-2xl border border-gray-200 bg-white">
-      <CardHeader className="pt-8 pb-4">
+  <div className="w-full h-screen  bg-gray-50 flex items-center justify-center">
+    <Card className="w-full max-w-2xl shadow-xl rounded-2xl border border-gray-200 bg-white">
+      <CardHeader className="">
         <CardTitle className="text-3xl font-semibold text-center text-gray-900 tracking-tight">
-          {token ? "Welcome Back 👋" : "Create Your Account"}
+          {token ? "Welcome Back " : "Create Your Account"}
         </CardTitle>
         <p className="text-center text-sm text-gray-500 mt-2">
           {token
@@ -97,7 +97,7 @@ useEffect(() => {
           </div>
         ) : (
           <>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-1.5">
                 <Label htmlFor="name">Full Name</Label>
                 <div className="flex items-center gap-2 border rounded-xl px-3 py-2.5 bg-white">
@@ -151,7 +151,7 @@ useEffect(() => {
               </Button>
             </form>
 
-            <div className="mt-7 flex flex-col gap-3">
+            <div className="mt-2 flex flex-col gap-3">
               <div className="text-center text-gray-500 text-sm">or continue with</div>
 
               <div className="flex gap-3">
