@@ -7,26 +7,24 @@ import { Dialog, DialogTrigger, DialogContent, DialogTitle } from "./ui/dialog";
 import Register from "./register";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
+import UniqueForm from "./register";
 
 export default function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
-
   const router = useRouter();
 
-const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
 
-useEffect(() => {
-  const storedToken = localStorage.getItem("token");
-  if (storedToken) {
-    setToken(storedToken);
-  }
-}, []);
-
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+    }
+  }, []);
 
   const handleLogout = async () => {
     try {
       localStorage.removeItem("token");
-     router.push('/'); // Redirect to home or login page
+      router.push("/"); // Redirect to home or login page
     } catch (error) {
       console.error("Logout failed:", error);
     }
@@ -52,20 +50,36 @@ useEffect(() => {
         <div className="flex items-center gap-3">
           {!token ? (
             <>
-              <Link href="/login">
-                <Button variant="ghost" className="text-gray-300 hover:text-white">
-                  Sign in
-                </Button>
-              </Link>
-              <Dialog  >
+              {/* SIGN IN DIALOG */}
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="text-gray-300 hover:text-white"
+                  >
+                    <DialogTitle className="font-sans">
+                    Sign in
+                    </DialogTitle>
+                  </Button>
+                </DialogTrigger>
+                <DialogContent aria-describedby={undefined}>
+                  <UniqueForm mode="login" />
+                </DialogContent>
+              </Dialog>
+
+              {/* REGISTER DIALOG */}
+              <Dialog>
                 <DialogTrigger asChild>
                   <Button className="bg-black hover:bg-white/10 text-white rounded-lg px-4 py-2 flex items-center gap-2">
                     <span>
-                      <DialogTitle className="font-sans">Get started</DialogTitle></span>
+                      <DialogTitle className="font-sans">
+                        Get started
+                      </DialogTitle>
+                    </span>
                   </Button>
                 </DialogTrigger>
-                <DialogContent aria-describedby={undefined} >
-                  <Register />
+                <DialogContent aria-describedby={undefined}>
+                  <UniqueForm mode="register" />
                 </DialogContent>
               </Dialog>
             </>

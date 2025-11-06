@@ -5,13 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mail, User, Lock, Github, Chrome } from "lucide-react";
-import { Register } from "@/lib/AxiosInstanxe";
+import { Mail, User, Lock, Github, Chrome, LogOut } from "lucide-react";
+import { Register, Login } from "@/lib/AxiosInstanxe";
 import { AuthType } from "@/types/AuthType";
 
-import { LogOut } from "lucide-react";
-
-export default function UniqueForm() {
+export default function UniqueForm({ mode }: { mode: "register" | "login" }) {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -22,13 +20,12 @@ export default function UniqueForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const formData: AuthType = {
-        email,
-        password,
-        username: name,
-      };
-      const response = await Register(formData);
-      // Save token if present
+      let formData: AuthType = { email, password };
+
+      if (mode === "register") formData.name = name;
+
+      const response = mode === "register" ? await Register(formData) : await Login(formData);
+
       if (response?.token) {
         localStorage.setItem("token", response.token);
         setToken(response.token);
@@ -38,7 +35,6 @@ export default function UniqueForm() {
     }
   };
 
-  //  OAuth Handlers
   const handleGoogleLogin = () => {
     window.location.href = "http://localhost:8080/api/v1/auth/google";
   };
@@ -52,11 +48,7 @@ export default function UniqueForm() {
     setToken(null);
   };
 
-  // Listen for token in URL after OAuth
-
-
-useEffect(() => {
-  if (typeof window !== "undefined") {
+  useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const oauthToken = params.get("token");
     if (oauthToken) {
@@ -64,133 +56,112 @@ useEffect(() => {
       setToken(oauthToken);
       window.history.replaceState({}, document.title, window.location.pathname);
     }
-  }
-}, []);
+  }, []);
 
+  return (
+    <div className="w-full h-screen bg-gray-50 flex items-center justify-center">
+      <Card className="w-full max-w-2xl shadow-xl rounded-2xl border border-gray-200 bg-white">
+        <CardHeader>
+          <CardTitle className="text-3xl font-semibold text-center text-gray-900 tracking-tight">
+            {token ? "Welcome Back" : mode === "login" ? "Sign in to continue" : "Create Your Account"}
+          </CardTitle>
+        </CardHeader>
 
-
- return (
-  <div className="w-full h-screen  bg-gray-50 flex items-center justify-center">
-    <Card className="w-full max-w-2xl shadow-xl rounded-2xl border border-gray-200 bg-white">
-      <CardHeader className="">
-        <CardTitle className="text-3xl font-semibold text-center text-gray-900 tracking-tight">
-          {token ? "Welcome Back " : "Create Your Account"}
-        </CardTitle>
-        <p className="text-center text-sm text-gray-500 mt-2">
-          {token
-            ? "You are successfully logged in."
-            : "Sign up to continue & unlock your personalized dashboard."}
-        </p>
-      </CardHeader>
-
-      <CardContent className="px-7 pb-8">
-        {token ? (
-          <div className="flex flex-col items-center gap-6">
-            <Button
-              variant="outline"
-              onClick={handleLogout}
-              className="flex items-center gap-2 w-full border-gray-300 hover:bg-gray-100 h-11 rounded-xl"
-            >
-              <LogOut className="w-4 h-4 text-gray-800" />
-              Logout
-            </Button>
-          </div>
-        ) : (
-          <>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-1.5">
-                <Label htmlFor="name">Full Name</Label>
-                <div className="flex items-center gap-2 border rounded-xl px-3 py-2.5 bg-white">
-                  <User className="w-4 h-4 text-gray-500" />
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="John Doe"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="border-0 focus-visible:ring-0 focus-visible:outline-none shadow-none"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <Label htmlFor="email">Email Address</Label>
-                <div className="flex items-center gap-2 border rounded-xl px-3 py-2.5 bg-white">
-                  <Mail className="w-4 h-4 text-gray-500" />
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="border-0 focus-visible:ring-0 focus-visible:outline-none shadow-none"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <Label htmlFor="password">Password</Label>
-                <div className="flex items-center gap-2 border rounded-xl px-3 py-2.5 bg-white">
-                  <Lock className="w-4 h-4 text-gray-500" />
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="border-0 focus-visible:ring-0 focus-visible:outline-none shadow-none"
-                  />
-                </div>
-              </div>
-
+        <CardContent className="px-7 pb-8">
+          {token ? (
+            <div className="flex flex-col items-center gap-6">
               <Button
-                type="submit"
-                className="w-full h-11 rounded-xl text-white font-medium shadow-md"
+                variant="outline"
+                onClick={handleLogout}
+                className="flex items-center gap-2 w-full border-gray-300 hover:bg-gray-100 h-11 rounded-xl"
               >
-                Get Started
+                <LogOut className="w-4 h-4 text-gray-800" />
+                Logout
               </Button>
-            </form>
-
-            <div className="mt-2 flex flex-col gap-3">
-              <div className="text-center text-gray-500 text-sm">or continue with</div>
-
-              <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  onClick={handleGoogleLogin}
-                  className="flex items-center gap-2 w-full border-gray-300 hover:bg-gray-100 h-11 rounded-xl"
-                >
-                  <Chrome className="w-4 h-4 text-red-500" />
-                  Google
-                </Button>
-
-                <Button
-                  variant="outline"
-                  onClick={handleGithubLogin}
-                  className="flex items-center gap-2 w-full border-gray-300 hover:bg-gray-100 h-11 rounded-xl"
-                >
-                  <Github className="w-4 h-4 text-gray-800" />
-                  GitHub
-                </Button>
-              </div>
             </div>
+          ) : (
+            <>
+              <form onSubmit={handleSubmit} className="space-y-4">
 
-            <p className="text-xs text-gray-500 text-center mt-6 leading-5 px-4">
-              By continuing, you agree to our{" "}
-              <span className="text-indigo-600 font-medium cursor-pointer hover:underline">
-                Terms of Service
-              </span>{" "}
-              and{" "}
-              <span className="text-indigo-600 font-medium cursor-pointer hover:underline">
-                Privacy Policy
-              </span>
-              .
-            </p>
-          </>
-        )}
-      </CardContent>
-    </Card>
-  </div>
-);
+                {mode === "register" && (
+                  <div className="space-y-1.5">
+                    <Label htmlFor="name">Full Name</Label>
+                    <div className="flex items-center gap-2 border rounded-xl px-3 py-2.5 bg-white">
+                      <User className="w-4 h-4 text-gray-500" />
+                      <Input
+                        id="name"
+                        type="text"
+                        placeholder="John Doe"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="border-0 focus-visible:ring-0 focus-visible:outline-none shadow-none"
+                      />
+                    </div>
+                  </div>
+                )}
 
+                <div className="space-y-1.5">
+                  <Label htmlFor="email">Email Address</Label>
+                  <div className="flex items-center gap-2 border rounded-xl px-3 py-2.5 bg-white">
+                    <Mail className="w-4 h-4 text-gray-500" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="you@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="border-0 focus-visible:ring-0 focus-visible:outline-none shadow-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="password">Password</Label>
+                  <div className="flex items-center gap-2 border rounded-xl px-3 py-2.5 bg-white">
+                    <Lock className="w-4 h-4 text-gray-500" />
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="border-0 focus-visible:ring-0 focus-visible:outline-none shadow-none"
+                    />
+                  </div>
+                </div>
+
+                <Button type="submit" className="w-full h-11 rounded-xl text-white font-medium shadow-md">
+                  {mode === "login" ? "Sign In" : "Get Started"}
+                </Button>
+              </form>
+                <div className="mt-3 flex flex-col gap-3">
+                  <div className="text-center text-gray-500 text-sm">or continue with</div>
+
+                  <div className="flex gap-3">
+                    <Button
+                      variant="outline"
+                      onClick={handleGoogleLogin}
+                      className="flex items-center gap-2 w-full border-gray-300 hover:bg-gray-100 h-11 rounded-xl"
+                    >
+                      <Chrome className="w-4 h-4" />
+                      Google
+                    </Button>
+
+                    <Button
+                      variant="outline"
+                      onClick={handleGithubLogin}
+                      className="flex items-center gap-2 w-full border-gray-300 hover:bg-gray-100 h-11 rounded-xl"
+                    >
+                      <Github className="w-4 h-4" />
+                      GitHub
+                    </Button>
+                  </div>
+                </div>
+            
+            </>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
 }

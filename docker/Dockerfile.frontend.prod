@@ -4,7 +4,7 @@ WORKDIR /app
 ARG NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
 ENV NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
 
-COPY ./apps/frontend/ ./apps/frontend
+COPY ./apps/web/ ./apps/web
 COPY ./packages/ ./packages
 COPY package* .
 COPY turbo.json .

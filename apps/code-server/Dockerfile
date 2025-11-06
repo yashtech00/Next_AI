@@ -9,11 +9,13 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# create folder as root (this is important)
+RUN mkdir -p /coder/NextAi-worker
+RUN chown -R coder:coder /coder
+
+# switch to coder user
 USER coder
 
 EXPOSE 8080
 
-RUN mkdir -p /home/coder/project
-
-# Start code-server without authentication
-CMD ["code-server", "--auth", "none", "--bind-addr", "0.0.0.0:8091","/home/coder/project"]
+CMD ["code-server", "--auth", "none", "--bind-addr", "0.0.0.0:8080", "/coder/NextAi-worker"]

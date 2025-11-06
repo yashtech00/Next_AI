@@ -136,7 +136,9 @@ app.post("/prompt", async (req, res) => {
   }
 });
 
-export default app;
+app.listen(4000, () => {
+  console.log("Worker server running on port 4000");
+});
 
 
 
