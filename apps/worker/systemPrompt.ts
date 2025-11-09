@@ -212,7 +212,7 @@ Here are some examples of correct usage of artifacts:
 const REACT_NATIVE_ARTIFACT_INFO = `
 <framework_info>
   You are creating a react native expo app. All code should be written in typescript.
-  0. CRITICAL: Assume you already have a react native project initialized in the current working directory. You DO NOT NEED TO re-initialize it. It is initialized in the /tmp/bolty-worker directory using the command npx create-expo-app@latest.
+  0. CRITICAL: Assume you already have a react native project initialized in the current working directory. You DO NOT NEED TO re-initialize it. It is initialized in the /coder/NextAi-worker directory using the command npx create-expo-app@latest.
   1. We use the latest version of expo. The folder structure has "app", "assets", "components", "constants", "hooks" as the folders. We are using the expo router for routing. 
 </framework_info>
 

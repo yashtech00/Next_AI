@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Paperclip, Globe, Mic, ArrowUp } from "lucide-react";
 import { useState, useEffect } from "react";
-import { Sidebar } from "./sidebar";
 import { motion } from "framer-motion";
 import { createProject } from "@/lib/AxiosInstanxe";
 import { useRouter } from "next/navigation";
